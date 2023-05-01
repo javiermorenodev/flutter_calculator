@@ -12,15 +12,19 @@ class CalculateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return isSecondary
-        ? _content(context)
-        : Expanded(
-            flex: 1,
-            child: _content(context),
-          );
+    return BlocBuilder<CalculatorBloc, CalculatorState>(
+      builder: (context, state) {
+        return isSecondary
+            ? _content(state, context)
+            : Expanded(
+                flex: 1,
+                child: _content(state, context),
+              );
+      },
+    );
   }
 
-  Widget _content(BuildContext context) {
+  Widget _content(CalculatorState calculatorState, BuildContext context) {
     return BlocBuilder<ThemeBloc, ThemeState>(
       builder: (context, themeState) {
         return SizedBox(
@@ -38,7 +42,7 @@ class CalculateWidget extends StatelessWidget {
                       FittedBox(
                         fit: BoxFit.contain,
                         child: Text(
-                          '10',
+                          calculatorState.firstNumber,
                           style: TextStyle(
                             fontSize: 45.0,
                             color: themeState.isPrimary
@@ -49,24 +53,26 @@ class CalculateWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10.0, left: 10.0),
-                        child: Text(
-                          '-',
-                          style: TextStyle(
-                            fontSize: 45.0,
-                            color: themeState.isPrimary
-                                ? const Color(0xFF4D9BDE).withOpacity(.9)
-                                : Theme.of(context)
-                                    .primaryColor
-                                    .withOpacity(.9),
+                      if (calculatorState.operation != Operation.none)
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(right: 10.0, left: 10.0),
+                          child: Text(
+                            calculatorState.getOperationValue(),
+                            style: TextStyle(
+                              fontSize: 45.0,
+                              color: themeState.isPrimary
+                                  ? const Color(0xFF4D9BDE).withOpacity(.9)
+                                  : Theme.of(context)
+                                      .primaryColor
+                                      .withOpacity(.9),
+                            ),
                           ),
                         ),
-                      ),
                       FittedBox(
                         fit: BoxFit.contain,
                         child: Text(
-                          '50',
+                          calculatorState.secondNumber,
                           style: TextStyle(
                             fontSize: 45.0,
                             color: themeState.isPrimary
@@ -97,7 +103,7 @@ class CalculateWidget extends StatelessWidget {
                 FittedBox(
                   fit: BoxFit.contain,
                   child: Text(
-                    '40',
+                    calculatorState.result,
                     style: TextStyle(
                       fontSize: 45.0,
                       color: themeState.isPrimary

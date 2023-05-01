@@ -13,6 +13,8 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<ThemeBloc>(create: (BuildContext context) => ThemeBloc()),
+        BlocProvider<CalculatorBloc>(
+            create: (BuildContext context) => CalculatorBloc()),
       ],
       child: Sizer(
         builder: (context, orientation, deviceType) {
